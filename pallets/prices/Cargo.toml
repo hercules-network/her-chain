@@ -1,0 +1,47 @@
+[package]
+name = "module-prices"
+version = "0.1.0"
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[package.metadata.docs.rs]
+targets = ['x86_64-unknown-linux-gnu']
+
+[dependencies]
+codec = { package = "parity-scale-codec", version = "2.0.0", default-features = false, features = ["derive"] }
+frame-support = { version = "3.0.0", default-features = false }
+frame-system = { version = "3.0.0", default-features = false }
+sp-std = { version = "3.0.0", default-features = false }
+sp-runtime = { version = "3.0.0", default-features = false }
+sp-io = { version = "3.0.0", default-features = false}
+sp-core = { version = "3.0.0", default-features = false }
+
+orml-traits = { default-features = false, version = '0.4.0' }
+orml-utilities = { default-features = false, version = '0.4.0' }
+
+module-support = { package = "module-support",  path = "../../support", default-features = false }
+her-primitives = { path = "../../primitives", default-features = false }
+
+# third-party dependencies
+serde = { version = "1.0.102", features = ["derive"] }
+
+[dev-dependencies]
+sp-core = { version = "3.0.0"}
+sp-io = { version = "3.0.0"}
+
+[features]
+default = ['std']
+std = [
+    "codec/std",
+    "serde/std",
+    "frame-support/std",
+    "frame-system/std",
+    "sp-runtime/std",
+    "sp-std/std",
+    "sp-core/std",
+    "orml-traits/std",
+    "orml-utilities/std",
+    "her-primitives/std",
+    "module-support/std",
+]

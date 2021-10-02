@@ -1,0 +1,36 @@
+[profile.release]
+panic = 'unwind'
+
+[workspace]
+default-members = [
+    "node",
+    "support",
+    "primitives",
+    "pallets/*",
+    "runtime",
+]
+
+members = [
+    "node",
+    "support",
+    "primitives",
+    "pallets/assets",
+    "pallets/bridge",
+    "pallets/common",
+    "pallets/forum",
+    "pallets/names",
+    "pallets/nft",
+    "pallets/nft-auction",
+    "pallets/nft-blindbox",
+    "pallets/nft-multi",
+    "pallets/nft-trade",
+    "pallets/prices",
+    "pallets/rewards",
+    "pallets/stake",
+    "pallets/staking",
+    "pallets/staking/rpc",
+    "pallets/staking/rpc/runtime-api",
+    "pallets/template",
+    "pallets/validator-set",
+    "runtime",
+]
