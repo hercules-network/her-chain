@@ -14,14 +14,14 @@ frame-support = { version = "3.0.0", default-features = false }
 frame-system = { version = "3.0.0", default-features = false }
 sp-std = { version = "3.0.0", default-features = false }
 sp-runtime = { version = "3.0.0", default-features = false }
-sp-io = { version = "3.0.0", default-features = false}
+sp-io = { version = "3.0.0", default-features = false }
 sp-core = { version = "3.0.0", default-features = false }
 # third-party dependencies
 serde = { version = "1.0.102", features = ["derive"] }
 sha3 = { version = "0.9.1", default-features = false }
 
-pallet-balances = { version = "3.0.0", default-features = false}
-pallet-timestamp = { version = "3.0.0", default-features = false}
+pallet-balances = { version = "3.0.0", default-features = false }
+pallet-timestamp = { version = "3.0.0", default-features = false }
 
 # orml
 orml-currencies = { default-features = false, version = '0.4.0' }
@@ -31,7 +31,7 @@ orml-traits = { default-features = false, version = '0.4.0' }
 her-primitives = { default-features = false, path = "../../primitives" }
 
 [dev-dependencies]
-sp-core = { version = "3.0.0"}
+sp-core = { version = "3.0.0" }
 
 [features]
 default = ['std']

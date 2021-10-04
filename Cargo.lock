@@ -453,9 +453,9 @@ dependencies = [
 
 [[package]]
 name = "bindgen"
-version = "0.57.0"
+version = "0.59.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fd4865004a46a0aafb2a0a5eb19d3c9fc46ee5f063a6cfc605c69ac9ecf5263d"
+checksum = "453c49e5950bb0eb63bb3df640e31618846c89d5b7faa54040d76e98e0134375"
 dependencies = [
  "bitflags",
  "cexpr",
@@ -478,12 +478,24 @@ checksum = "cf1de2fe8c75bc145a2f577add951f8134889b4795d47466a54a5c846d691693"
 
 [[package]]
 name = "bitvec"
+version = "0.19.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8942c8d352ae1838c9dda0b0ca2ab657696ef2232a20147cf1b30ae1a9cb4321"
+dependencies = [
+ "funty",
+ "radium 0.5.3",
+ "tap",
+ "wyz",
+]
+
+[[package]]
+name = "bitvec"
 version = "0.20.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7774144344a4faa177370406a7ff5f1da24303817368584c6206c8303eb07848"
 dependencies = [
  "funty",
- "radium",
+ "radium 0.6.2",
  "tap",
  "wyz",
 ]
@@ -716,9 +728,9 @@ dependencies = [
 
 [[package]]
 name = "cexpr"
-version = "0.4.0"
+version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f4aedb84272dbe89af497cf81375129abda4fc0a9e7c5d317498c15cc30c0d27"
+checksum = "db507a7679252d2276ed0dd8113c6875ec56d3089f9225b2b42c30cc1f8e5c89"
 dependencies = [
  "nom",
 ]
@@ -793,9 +805,9 @@ dependencies = [
 
 [[package]]
 name = "clang-sys"
-version = "1.2.0"
+version = "1.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "853eda514c284c2287f4bf20ae614f8781f40a81d32ecda6e91449304dfe077c"
+checksum = "10612c0ec0e0a1ff0e97980647cb058a6e7aedb913d01d009c406b8b7d0b26ee"
 dependencies = [
  "glob",
  "libc",
@@ -2140,6 +2152,69 @@ dependencies = [
 ]
 
 [[package]]
+name = "her"
+version = "0.1.0"
+dependencies = [
+ "frame-benchmarking",
+ "frame-benchmarking-cli",
+ "jsonrpc-core",
+ "node-template-runtime",
+ "pallet-transaction-payment-rpc",
+ "sc-basic-authorship",
+ "sc-cli",
+ "sc-client-api",
+ "sc-consensus",
+ "sc-consensus-aura",
+ "sc-executor",
+ "sc-finality-grandpa",
+ "sc-keystore",
+ "sc-rpc",
+ "sc-rpc-api",
+ "sc-service",
+ "sc-transaction-pool",
+ "sp-api",
+ "sp-block-builder",
+ "sp-blockchain",
+ "sp-consensus",
+ "sp-consensus-aura",
+ "sp-core",
+ "sp-finality-grandpa",
+ "sp-inherents",
+ "sp-runtime",
+ "sp-transaction-pool",
+ "structopt",
+ "substrate-build-script-utils",
+ "substrate-frame-rpc-system",
+]
+
+[[package]]
+name = "her-common"
+version = "0.1.0"
+dependencies = [
+ "frame-support",
+ "frame-system",
+ "her-primitives",
+ "pallet-authorship",
+ "pallet-balances",
+ "pallet-transaction-payment",
+ "parity-scale-codec",
+ "sp-runtime",
+ "sp-std",
+]
+
+[[package]]
+name = "her-primitives"
+version = "0.1.0"
+dependencies = [
+ "parity-scale-codec",
+ "serde",
+ "sp-consensus-aura",
+ "sp-core",
+ "sp-runtime",
+ "sp-std",
+]
+
+[[package]]
 name = "hermit-abi"
 version = "0.1.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3171,9 +3246,9 @@ dependencies = [
 
 [[package]]
 name = "librocksdb-sys"
-version = "6.17.3"
+version = "6.20.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5da125e1c0f22c7cae785982115523a0738728498547f415c9054cb17c7e89f9"
+checksum = "c309a9d2470844aceb9a4a098cf5286154d20596868b75a6b36357d2bb9ca25d"
 dependencies = [
  "bindgen",
  "cc",
@@ -3493,10 +3568,11 @@ dependencies = [
 
 [[package]]
 name = "module-prices"
-version = "3.0.0"
+version = "0.1.0"
 dependencies = [
  "frame-support",
  "frame-system",
+ "her-primitives",
  "module-support",
  "orml-traits",
  "orml-utilities",
@@ -3506,20 +3582,19 @@ dependencies = [
  "sp-io",
  "sp-runtime",
  "sp-std",
- "uniarts-primitives",
 ]
 
 [[package]]
 name = "module-support"
-version = "3.0.0"
+version = "0.1.0"
 dependencies = [
  "frame-support",
  "frame-system",
+ "her-primitives",
  "parity-scale-codec",
  "sp-core",
  "sp-runtime",
  "sp-std",
- "uniarts-primitives",
 ]
 
 [[package]]
@@ -3647,7 +3722,7 @@ dependencies = [
 
 [[package]]
 name = "node-template-runtime"
-version = "3.0.0"
+version = "0.1.0"
 dependencies = [
  "frame-benchmarking",
  "frame-executive",
@@ -3655,6 +3730,7 @@ dependencies = [
  "frame-system",
  "frame-system-benchmarking",
  "frame-system-rpc-runtime-api",
+ "her-primitives",
  "hex-literal",
  "pallet-assets",
  "pallet-aura",
@@ -3680,7 +3756,6 @@ dependencies = [
  "sp-transaction-pool",
  "sp-version",
  "substrate-wasm-builder",
- "uniarts-primitives",
 ]
 
 [[package]]
@@ -3697,10 +3772,12 @@ checksum = "2bf50223579dc7cdcfb3bfcacf7069ff68243f8c363f62ffa99cf000a6b9c451"
 
 [[package]]
 name = "nom"
-version = "5.1.2"
+version = "6.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ffb4262d26ed83a1c0a33a38fe2bb15797329c85770da05e6b828ddb782627af"
+checksum = "e7413f999671bd4745a7b624bd370a569fb6bc574b23c83a3c5ed2e453f3d5e2"
 dependencies = [
+ "bitvec 0.19.5",
+ "funty",
  "memchr",
  "version_check",
 ]
@@ -3912,7 +3989,7 @@ dependencies = [
 
 [[package]]
 name = "pallet-assets"
-version = "3.0.0"
+version = "0.1.0"
 dependencies = [
  "frame-benchmarking",
  "frame-support",
@@ -3978,10 +4055,11 @@ dependencies = [
 
 [[package]]
 name = "pallet-bridge"
-version = "3.0.0"
+version = "0.1.0"
 dependencies = [
  "frame-support",
  "frame-system",
+ "her-primitives",
  "orml-currencies",
  "orml-tokens",
  "orml-traits",
@@ -3994,12 +4072,11 @@ dependencies = [
  "sp-io",
  "sp-runtime",
  "sp-std",
- "uniarts-primitives",
 ]
 
 [[package]]
 name = "pallet-forum"
-version = "3.0.0"
+version = "0.1.0"
 dependencies = [
  "frame-support",
  "frame-system",
@@ -4036,7 +4113,7 @@ dependencies = [
 
 [[package]]
 name = "pallet-names"
-version = "3.0.0"
+version = "0.1.0"
 dependencies = [
  "enumflags2",
  "frame-benchmarking",
@@ -4053,10 +4130,11 @@ dependencies = [
 
 [[package]]
 name = "pallet-nft"
-version = "3.0.0"
+version = "0.1.0"
 dependencies = [
  "frame-support",
  "frame-system",
+ "her-primitives",
  "module-support",
  "pallet-names",
  "pallet-transaction-payment",
@@ -4067,15 +4145,15 @@ dependencies = [
  "sp-io",
  "sp-runtime",
  "sp-std",
- "uniarts-primitives",
 ]
 
 [[package]]
 name = "pallet-nft-auction"
-version = "3.0.0"
+version = "0.1.0"
 dependencies = [
  "frame-support",
  "frame-system",
+ "her-primitives",
  "module-support",
  "orml-currencies",
  "orml-tokens",
@@ -4089,15 +4167,15 @@ dependencies = [
  "sp-io",
  "sp-runtime",
  "sp-std",
- "uniarts-primitives",
 ]
 
 [[package]]
 name = "pallet-nft-blindbox"
-version = "3.0.0"
+version = "0.1.0"
 dependencies = [
  "frame-support",
  "frame-system",
+ "her-primitives",
  "module-support",
  "orml-currencies",
  "orml-tokens",
@@ -4111,15 +4189,15 @@ dependencies = [
  "sp-io",
  "sp-runtime",
  "sp-std",
- "uniarts-primitives",
 ]
 
 [[package]]
 name = "pallet-nft-multi"
-version = "3.0.0"
+version = "0.1.0"
 dependencies = [
  "frame-support",
  "frame-system",
+ "her-primitives",
  "module-support",
  "orml-currencies",
  "orml-tokens",
@@ -4134,15 +4212,15 @@ dependencies = [
  "sp-io",
  "sp-runtime",
  "sp-std",
- "uniarts-primitives",
 ]
 
 [[package]]
 name = "pallet-nft-trade"
-version = "3.0.0"
+version = "0.1.0"
 dependencies = [
  "frame-support",
  "frame-system",
+ "her-primitives",
  "module-support",
  "orml-currencies",
  "orml-tokens",
@@ -4156,7 +4234,6 @@ dependencies = [
  "sp-io",
  "sp-runtime",
  "sp-std",
- "uniarts-primitives",
 ]
 
 [[package]]
@@ -4175,7 +4252,7 @@ dependencies = [
 
 [[package]]
 name = "pallet-rewards"
-version = "3.0.0"
+version = "0.1.0"
 dependencies = [
  "frame-benchmarking",
  "frame-support",
@@ -4212,7 +4289,7 @@ dependencies = [
 
 [[package]]
 name = "pallet-stake"
-version = "3.0.0"
+version = "0.1.0"
 dependencies = [
  "frame-support",
  "frame-system",
@@ -4230,7 +4307,7 @@ dependencies = [
 
 [[package]]
 name = "pallet-staking"
-version = "3.0.0"
+version = "0.1.0"
 dependencies = [
  "frame-support",
  "frame-system",
@@ -4238,6 +4315,35 @@ dependencies = [
  "serde",
  "sp-api",
  "sp-core",
+ "sp-runtime",
+ "sp-std",
+]
+
+[[package]]
+name = "pallet-staking-rpc"
+version = "0.1.0"
+dependencies = [
+ "jsonrpc-core",
+ "jsonrpc-core-client",
+ "jsonrpc-derive",
+ "pallet-staking-rpc-runtime-api",
+ "parity-scale-codec",
+ "serde",
+ "sp-api",
+ "sp-blockchain",
+ "sp-core",
+ "sp-rpc",
+ "sp-runtime",
+]
+
+[[package]]
+name = "pallet-staking-rpc-runtime-api"
+version = "0.1.0"
+dependencies = [
+ "frame-support",
+ "parity-scale-codec",
+ "serde",
+ "sp-api",
  "sp-runtime",
  "sp-std",
 ]
@@ -4259,7 +4365,7 @@ dependencies = [
 
 [[package]]
 name = "pallet-template"
-version = "3.0.0"
+version = "0.1.0"
 dependencies = [
  "frame-support",
  "frame-system",
@@ -4338,7 +4444,7 @@ dependencies = [
 
 [[package]]
 name = "pallet-validator-set"
-version = "3.0.0"
+version = "0.1.0"
 dependencies = [
  "frame-support",
  "frame-system",
@@ -4393,7 +4499,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e0f518afaa5a47d0d6386229b0a6e01e86427291d643aa4cabb4992219f504f8"
 dependencies = [
  "arrayvec 0.7.1",
- "bitvec",
+ "bitvec 0.20.4",
  "byte-slice-cast",
  "parity-scale-codec-derive",
  "serde",
@@ -4981,6 +5087,12 @@ checksum = "c3d0b9745dc2debf507c8422de05d7226cc1f0644216dfdfead988f9b1ab32a7"
 dependencies = [
  "proc-macro2",
 ]
+
+[[package]]
+name = "radium"
+version = "0.5.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "941ba9d78d8e2f7ce474c015eea4d9c6d25b6a3327f9832ee29a4de27f91bbb8"
 
 [[package]]
 name = "radium"
@@ -6586,9 +6698,9 @@ dependencies = [
 
 [[package]]
 name = "shlex"
-version = "0.1.1"
+version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7fdf1b9db47230893d76faad238fd6097fd6d6a9245cd7a4d90dbd639536bbd2"
+checksum = "43b2853a4d09f215c24cc5489c992ce46052d359b5109343cbafbf26bc62f8a3"
 
 [[package]]
 name = "signal-hook"
@@ -8114,42 +8226,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "879f6906492a7cd215bfa4cf595b600146ccfac0c79bcbd1f3000162af5e8b06"
 
 [[package]]
-name = "uarts"
-version = "3.0.0"
-dependencies = [
- "frame-benchmarking",
- "frame-benchmarking-cli",
- "jsonrpc-core",
- "node-template-runtime",
- "pallet-transaction-payment-rpc",
- "sc-basic-authorship",
- "sc-cli",
- "sc-client-api",
- "sc-consensus",
- "sc-consensus-aura",
- "sc-executor",
- "sc-finality-grandpa",
- "sc-keystore",
- "sc-rpc",
- "sc-rpc-api",
- "sc-service",
- "sc-transaction-pool",
- "sp-api",
- "sp-block-builder",
- "sp-blockchain",
- "sp-consensus",
- "sp-consensus-aura",
- "sp-core",
- "sp-finality-grandpa",
- "sp-inherents",
- "sp-runtime",
- "sp-transaction-pool",
- "structopt",
- "substrate-build-script-utils",
- "substrate-frame-rpc-system",
-]
-
-[[package]]
 name = "ucd-trie"
 version = "0.1.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -8165,33 +8241,6 @@ dependencies = [
  "crunchy",
  "hex",
  "static_assertions",
-]
-
-[[package]]
-name = "uniarts-common"
-version = "3.0.0"
-dependencies = [
- "frame-support",
- "frame-system",
- "pallet-authorship",
- "pallet-balances",
- "pallet-transaction-payment",
- "parity-scale-codec",
- "sp-runtime",
- "sp-std",
- "uniarts-primitives",
-]
-
-[[package]]
-name = "uniarts-primitives"
-version = "3.0.0"
-dependencies = [
- "parity-scale-codec",
- "serde",
- "sp-consensus-aura",
- "sp-core",
- "sp-runtime",
- "sp-std",
 ]
 
 [[package]]

@@ -14,15 +14,15 @@ frame-support = { version = "3.0.0", default-features = false }
 frame-system = { version = "3.0.0", default-features = false }
 sp-std = { version = "3.0.0", default-features = false }
 sp-runtime = { version = "3.0.0", default-features = false }
-sp-io = { version = "3.0.0", default-features = false}
+sp-io = { version = "3.0.0", default-features = false }
 sp-core = { version = "3.0.0", default-features = false }
 # third-party dependencies
 serde = { version = "1.0.102", features = ["derive"] }
 
-pallet-timestamp = { version = "3.0.0", default-features = false}
+pallet-timestamp = { version = "3.0.0", default-features = false }
 
 [dev-dependencies]
-sp-core = { version = "3.0.0"}
+sp-core = { version = "3.0.0" }
 
 [features]
 default = ['std']
