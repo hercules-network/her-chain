@@ -1,6 +1,6 @@
 use super::*;
 use frame_support::weights::Weight;
-use her_primitives::CurrencyId;
+use lyra_primitives::CurrencyId;
 
 #[derive(Encode, Decode, Default, Clone, PartialEq, RuntimeDebug)]
 pub struct BlindboxItemV1<AccountId, BlockNumber> {
@@ -37,7 +37,7 @@ pub fn migrate_v1_to_t2<T: Config>() -> Weight {
             };
             Some(new_data)
         });
-        Weight::max_value()
+		Weight::max_value()
     } else {
         0
     }

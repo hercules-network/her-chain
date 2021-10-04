@@ -1,6 +1,7 @@
 [package]
-name = "her-common"
+name = "lyra-common"
 version = "0.1.0"
+authors = ["hercules-network"]
 edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -15,7 +16,7 @@ pallet-balances = { version = "3.0.0", default-features = false }
 pallet-authorship = { version = "3.0.0", default-features = false }
 pallet-transaction-payment = { version = "3.0.0", default-features = false }
 
-her-primitives = { path = "../../primitives", default-features = false }
+lyra-primitives = { path = "../../primitives", default-features = false }
 
 [features]
 default = ['std']
@@ -27,5 +28,5 @@ std = [
     'pallet-authorship/std',
     "pallet-balances/std",
     'pallet-transaction-payment/std',
-    'her-primitives/std',
+    'lyra-primitives/std',
 ]

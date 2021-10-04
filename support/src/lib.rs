@@ -2,7 +2,7 @@
 #![allow(clippy::upper_case_acronyms)]
 
 use sp_runtime::{DispatchResult, FixedU128};
-use her_primitives::CurrencyId;
+use lyra_primitives::CurrencyId;
 
 pub type Price = FixedU128;
 

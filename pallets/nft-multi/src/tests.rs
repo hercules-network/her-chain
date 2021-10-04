@@ -662,7 +662,7 @@ fn burn_refungible_item() {
             token_prefix1.clone(),
             mode
         ));
-
+        
         assert_ok!(TemplateModule::set_mint_permission(origin1.clone(), 1, true));
         assert_ok!(TemplateModule::set_public_access_mode(origin1.clone(), 1, AccessMode::WhiteList));
         assert_ok!(TemplateModule::add_to_white_list(origin1.clone(), 1, 1));

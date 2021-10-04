@@ -27,7 +27,7 @@ pub use frame_support::{
 };
 use frame_system::{self as system, ensure_signed, ensure_root};
 use pallet_timestamp as timestamp;
-use her_primitives::{CurrencyId, Balance};
+use lyra_primitives::{CurrencyId, Balance};
 use orml_traits::{MultiCurrency, MultiCurrencyExtended, MultiLockableCurrency};
 
 const MAX_VALIDATORS: u32 = 100_000;
@@ -240,7 +240,7 @@ decl_module! {
         #[weight = 0]
         // init validators
         pub fn init_bridge_validators(origin, new_validator_list: Vec<T::AccountId>) -> DispatchResult {
-            // uni-arts
+            // lyra
 			ensure_root(origin.clone())?;
 
             let new_count = new_validator_list.clone().len() as u32;

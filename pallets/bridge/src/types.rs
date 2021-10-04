@@ -2,7 +2,7 @@ use codec::{Decode, Encode};
 use sp_core::H160;
 use sp_std::prelude::Vec;
 use sp_runtime::RuntimeDebug;
-use her_primitives::Balance;
+use lyra_primitives::Balance;
 
 pub type MemberId = u64;
 pub type ProposalId = u64;
@@ -87,9 +87,9 @@ pub struct ValidatorsMessage<AccountId, Hash> {
 }
 
 impl<A, H> Default for TransferMessage<A, H>
-    where
-        A: Default,
-        H: Default,
+where
+    A: Default,
+    H: Default,
 {
     fn default() -> Self {
         TransferMessage {
@@ -104,8 +104,8 @@ impl<A, H> Default for TransferMessage<A, H>
 }
 
 impl<H> Default for LimitMessage<H>
-    where
-        H: Default,
+where
+    H: Default,
 {
     fn default() -> Self {
         LimitMessage {
@@ -117,9 +117,9 @@ impl<H> Default for LimitMessage<H>
 }
 
 impl<A, H> Default for BridgeMessage<A, H>
-    where
-        A: Default,
-        H: Default,
+where
+    A: Default,
+    H: Default,
 {
     fn default() -> Self {
         BridgeMessage {
@@ -132,9 +132,9 @@ impl<A, H> Default for BridgeMessage<A, H>
 }
 
 impl<A, H> Default for ValidatorsMessage<A, H>
-    where
-        A: Default,
-        H: Default,
+where
+    A: Default,
+    H: Default,
 {
     fn default() -> Self {
         ValidatorsMessage {
@@ -148,8 +148,8 @@ impl<A, H> Default for ValidatorsMessage<A, H>
 }
 
 impl<H> Default for BridgeTransfer<H>
-    where
-        H: Default,
+where
+    H: Default,
 {
     fn default() -> Self {
         BridgeTransfer {

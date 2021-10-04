@@ -8,7 +8,7 @@ use frame_support::{
 use frame_system::{self as system};
 use orml_traits::{DataFeeder, DataProvider};
 use orml_utilities::with_transaction_result;
-use her_primitives::CurrencyId;
+use lyra_primitives::CurrencyId;
 use sp_runtime::traits::{CheckedDiv};
 use module_support::{Price, PriceProvider};
 
@@ -62,10 +62,10 @@ decl_module! {
 		const StableCurrencyFixedPrice: Price = T::StableCurrencyFixedPrice::get();
 
 		/// Lock the price and feed it to system.
-        ///
-        /// The dispatch origin of this call must be `LockOrigin`.
-        ///
-        /// - `currency_id`: currency type.
+		///
+		/// The dispatch origin of this call must be `LockOrigin`.
+		///
+		/// - `currency_id`: currency type.
 		#[weight = (T::WeightInfo::lock_price(), DispatchClass::Operational)]
 		pub fn lock_price(origin, currency_id: CurrencyId) {
 			with_transaction_result(|| {
@@ -76,10 +76,10 @@ decl_module! {
 		}
 
 		/// Unlock the price and get the price from `PriceProvider` again
-        ///
-        /// The dispatch origin of this call must be `LockOrigin`.
-        ///
-        /// - `currency_id`: currency type.
+		///
+		/// The dispatch origin of this call must be `LockOrigin`.
+		///
+		/// - `currency_id`: currency type.
 		#[weight = (T::WeightInfo::unlock_price(), DispatchClass::Operational)]
 		pub fn unlock_price(origin, currency_id: CurrencyId) {
 			with_transaction_result(|| {

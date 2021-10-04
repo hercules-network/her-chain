@@ -60,7 +60,7 @@ pub trait Config: frame_system::Config {
     /// a certain operation.  If `None` is returned, it means that the
     /// operation is invalid (e.g. the name is too short).
     fn get_name_fee(op: &Operation<Self>)
-                    -> Option<<Self::Currency as Currency<Self::AccountId>>::Balance>;
+        -> Option<<Self::Currency as Currency<Self::AccountId>>::Balance>;
 
     /// For a given name operation, computes the number of blocks before the
     /// name will expire again.  If `None` is returned, then the name will

@@ -1,6 +1,7 @@
 [package]
 name = "pallet-stake"
 version = "0.1.0"
+authors = ["hercules-network"]
 edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -15,8 +16,8 @@ frame-system = { version = "3.0.0", default-features = false }
 sp-std = { version = "3.0.0", default-features = false }
 sp-runtime = { version = "3.0.0", default-features = false }
 sp-arithmetic = { version = "3.0.0", default-features = false }
-sp-io = { version = "3.0.0", default-features = false }
-transaction-payment = { version = "3.0.0", package = 'pallet-transaction-payment', default-features = false }
+sp-io = { version = "3.0.0", default-features = false}
+transaction-payment = { version = "3.0.0", package = 'pallet-transaction-payment', default-features = false}
 # third-party dependencies
 serde = { version = "1.0.102", features = ["derive"] }
 

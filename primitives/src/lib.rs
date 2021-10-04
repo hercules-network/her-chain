@@ -103,18 +103,18 @@ fn print_module_account() {
     // 6d6f646c70792f74727372790000000000000000000000000000000000000000 (5EYCAe5i...)
     account_of(*b"py/trsry", SubstrateAccount);
 
-    // her/nftb:
+    // lyr/nftb:
     // 5EYCAe5fj5zwigs2Sr1KavTHcx1xfnpjUkN4SnAW9ngo8k4g
     // 6d6f646c6172742f6e6674620000000000000000000000000000000000000000 (5EYCAe5f...)
-    account_of(*b"her/nftb", SubstrateAccount);
+    account_of(*b"lyr/nftb", SubstrateAccount);
 
-    // her/soci:
+    // lyr/soci:
     // 5EYCAe5fj5zwiqofZc6Q2cXmZSJQm9kW7Q5e1np77Fyog5DQ
     // 6d6f646c6172742f736f63690000000000000000000000000000000000000000 (5EYCAe5f...)
-    account_of(*b"her/soci", SubstrateAccount);
+    account_of(*b"lyr/soci", SubstrateAccount);
 
-    // her/phre:
+    // lyr/phre:
     // 5EYCAe5fj5zwikRqzNMCGpqMKcMNku4UHZTCpcGv2VmqWFAC
     // 6d6f646c6172742f706872650000000000000000000000000000000000000000 (5EYCAe5f...)
-    account_of(*b"her/phre", SubstrateAccount);
+    account_of(*b"lyr/phre", SubstrateAccount);
 }

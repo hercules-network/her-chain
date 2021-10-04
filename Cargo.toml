@@ -24,7 +24,7 @@ members = [
     "pallets/nft-blindbox",
     "pallets/nft-multi",
     "pallets/nft-trade",
-    "pallets/prices",
+    "pallets/price",
     "pallets/rewards",
     "pallets/stake",
     "pallets/staking",

@@ -1,6 +1,6 @@
 use super::*;
 use frame_support::weights::Weight;
-use her_primitives::CurrencyId;
+use lyra_primitives::CurrencyId;
 
 #[derive(Encode, Decode, Default, Clone, PartialEq)]
 #[cfg_attr(feature = "std", derive(Debug))]
@@ -162,7 +162,7 @@ pub fn migrate_v1_to_t2<T: Config>() -> Weight {
                 })
                 .collect::<Vec<_>>()
         ));
-        Weight::max_value()
+		Weight::max_value()
     } else {
         0
     }

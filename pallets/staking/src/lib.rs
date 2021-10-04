@@ -1,21 +1,21 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
 use frame_support::{
-    decl_module, decl_storage,
-    decl_event, decl_error, dispatch, ensure,
-    Parameter,
-    traits::{Currency, Get, ExistenceRequirement},
-    weights::Weight,
+	decl_module, decl_storage,
+	decl_event, decl_error, dispatch, ensure,
+	Parameter,
+	traits::{Currency, Get, ExistenceRequirement},
+	weights::Weight,
 };
 use frame_system::{ensure_signed, ensure_root};
 
 use sp_runtime::{
-    ModuleId,
-    traits::{
-        AccountIdConversion,
-        Zero, One, Saturating, SaturatedConversion,
-        AtLeast32Bit, Convert
-    }
+	ModuleId,
+	traits::{
+		AccountIdConversion,
+		Zero, One, Saturating, SaturatedConversion,
+		AtLeast32Bit, Convert
+	}
 };
 use codec::{Encode, Decode};
 use sp_std::prelude::*;
@@ -23,44 +23,44 @@ use sp_std::prelude::*;
 mod default_weights;
 
 pub trait WeightInfo {
-    fn stake() -> Weight;
-    fn unstake() -> Weight;
+	fn stake() -> Weight;
+	fn unstake() -> Weight;
 }
 
 pub type BalanceOf<T> =
-<<T as Config>::Currency as Currency<<T as frame_system::Config>::AccountId>>::Balance;
+	<<T as Config>::Currency as Currency<<T as frame_system::Config>::AccountId>>::Balance;
 pub type AccountId<T> = <T as frame_system::Config>::AccountId;
 pub type BlockNumber<T> = <T as frame_system::Config>::BlockNumber;
 
 /// Configure the pallet by specifying the parameters and types on which it depends.
 pub trait Config: frame_system::Config {
-    type Event: From<Event<Self>> + Into<<Self as frame_system::Config>::Event>;
+	type Event: From<Event<Self>> + Into<<Self as frame_system::Config>::Event>;
 
-    type ModuleId: Get<ModuleId>;
-    type Currency: Currency<AccountId<Self>> + Send + Sync;
-    type RewardPerBlock: Get<BalanceOf<Self>>;
-    type Id: Parameter + AtLeast32Bit + Default + Copy;
-    type AmpFactor: Get<BalanceOf<Self>>;
-    type ConvertNumberToBalance: Convert<BlockNumber<Self>, BalanceOf<Self>>;
-    type WeightInfo: WeightInfo;
+	type ModuleId: Get<ModuleId>;
+	type Currency: Currency<AccountId<Self>> + Send + Sync;
+	type RewardPerBlock: Get<BalanceOf<Self>>;
+	type Id: Parameter + AtLeast32Bit + Default + Copy;
+	type AmpFactor: Get<BalanceOf<Self>>;
+	type ConvertNumberToBalance: Convert<BlockNumber<Self>, BalanceOf<Self>>;
+	type WeightInfo: WeightInfo;
 }
 
 
 #[derive(Debug, Encode, Decode, Default, Clone, PartialEq)]
 pub struct Pool<Id, Number, Balance, AccountId> {
-    pub id: Id,
-    pub account: AccountId,
-    pub acc_rewards_per_share: Balance,
-    pub last_reward_block: Number,
-    pub asset_id: Id,
-    pub total_balance: Balance,
+	pub id: Id,
+	pub account: AccountId,
+	pub acc_rewards_per_share: Balance,
+	pub last_reward_block: Number,
+	pub asset_id: Id,
+	pub total_balance: Balance,
 }
 
 #[derive(Debug, Encode, Decode, Default, Clone, PartialEq)]
 pub struct Staker<Balance> {
-    pub amount: Balance,
-    pub reward: Balance,
-    pub debt: Balance,
+	pub amount: Balance,
+	pub reward: Balance,
+	pub debt: Balance,
 }
 
 decl_storage! {
@@ -278,41 +278,41 @@ decl_module! {
 
 
 impl<T: Config> Module<T> {
-    pub fn account_id() -> T::AccountId {
-        T::ModuleId::get().into_account()
-    }
+	pub fn account_id() -> T::AccountId {
+		T::ModuleId::get().into_account()
+	}
 
-    pub fn pool_account_id(pool_id: T::Id) -> T::AccountId {
-        let pid = pool_id.saturated_into::<u8>();
-        let mut id = [0u8; 8];
-        id[0..7].copy_from_slice(&*b"staking");
-        id[7] = pid;
-        ModuleId(id).into_account()
-    }
+	pub fn pool_account_id(pool_id: T::Id) -> T::AccountId {
+		let pid = pool_id.saturated_into::<u8>();
+		let mut id = [0u8; 8];
+		id[0..7].copy_from_slice(&*b"staking");
+		id[7] = pid;
+		ModuleId(id).into_account()
+	}
 
-    pub fn reward_per_block() -> BalanceOf<T> {
-        // TODO: adjust rewards of staking
-        T::RewardPerBlock::get()
-    }
+	pub fn reward_per_block() -> BalanceOf<T> {
+		// TODO: adjust rewards of staking
+		T::RewardPerBlock::get()
+	}
 
-    /// Pending rewards of staker
-    pub fn pending_rewards(pool_id: T::Id, account_id: T::AccountId) -> BalanceOf<T> {
-        let staker_key = (pool_id, account_id);
-        let staker = Self::stakers(&staker_key);
-        let pool = Self::pools(pool_id);
+	/// Pending rewards of staker
+	pub fn pending_rewards(pool_id: T::Id, account_id: T::AccountId) -> BalanceOf<T> {
+		let staker_key = (pool_id, account_id);
+		let staker = Self::stakers(&staker_key);
+		let pool = Self::pools(pool_id);
 
-        let block_number = frame_system::Module::<T>::block_number();
-        let reward_per_block: BalanceOf<T> = Self::reward_per_block();
-        let factor: BalanceOf<T> = T::AmpFactor::get();
+		let block_number = frame_system::Module::<T>::block_number();
+		let reward_per_block: BalanceOf<T> = Self::reward_per_block();
+		let factor: BalanceOf<T> = T::AmpFactor::get();
 
-        let delta = block_number.saturating_sub(pool.last_reward_block);
-        let blocks: BalanceOf<T> = T::ConvertNumberToBalance::convert(delta);
-        let rewards = reward_per_block.saturating_mul(blocks);
-        if pool.total_balance == Zero::zero() {
-            return Zero::zero();
-        }
-        let rewards_per_share = rewards.saturating_mul(factor) / pool.total_balance;
-        let acc_rewards_per_share = pool.acc_rewards_per_share.saturating_add(rewards_per_share);
-        staker.amount.saturating_mul(acc_rewards_per_share) / factor - staker.debt
-    }
+		let delta = block_number.saturating_sub(pool.last_reward_block);
+		let blocks: BalanceOf<T> = T::ConvertNumberToBalance::convert(delta);
+		let rewards = reward_per_block.saturating_mul(blocks);
+		if pool.total_balance == Zero::zero() {
+			return Zero::zero();
+		}
+		let rewards_per_share = rewards.saturating_mul(factor) / pool.total_balance;
+		let acc_rewards_per_share = pool.acc_rewards_per_share.saturating_add(rewards_per_share);
+		staker.amount.saturating_mul(acc_rewards_per_share) / factor - staker.debt
+	}
 }

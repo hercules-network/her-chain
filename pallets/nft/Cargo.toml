@@ -1,9 +1,8 @@
 [package]
 name = "pallet-nft"
 version = "0.1.0"
+authors = ["hercules-network"]
 edition = "2018"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [package.metadata.docs.rs]
 targets = ['x86_64-unknown-linux-gnu']
@@ -14,9 +13,9 @@ frame-support = { version = "3.0.0", default-features = false }
 frame-system = { version = "3.0.0", default-features = false }
 sp-std = { version = "3.0.0", default-features = false }
 sp-runtime = { version = "3.0.0", default-features = false }
-sp-io = { version = "3.0.0", default-features = false }
+sp-io = { version = "3.0.0", default-features = false}
 sp-core = { version = "3.0.0", default-features = false }
-transaction-payment = { version = "3.0.0", package = 'pallet-transaction-payment', default-features = false }
+transaction-payment = { version = "3.0.0", package = 'pallet-transaction-payment', default-features = false}
 pallet-names = { path = "../names", default-features = false}
 
 # third-party dependencies
@@ -24,10 +23,10 @@ serde = { version = "1.0.101", optional = true }
 sha3 = { version = "0.9.1", default-features = false }
 support = { package = "module-support",  path = "../../support", default-features = false }
 
-her-primitives = { path = "../../primitives", default-features = false }
+lyra-primitives = { path = "../../primitives", default-features = false }
 
 [dev-dependencies]
-sp-core = { version = "3.0.0" }
+sp-core = { version = "3.0.0"}
 
 [features]
 default = ['std']
@@ -43,6 +42,6 @@ std = [
     "pallet-names/std",
     "transaction-payment/std",
     "sha3/std",
-    "her-primitives/std",
+    "lyra-primitives/std",
     "support/std",
 ]

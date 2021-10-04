@@ -1,9 +1,8 @@
 [package]
 name = "pallet-nft-auction"
 version = "0.1.0"
+authors = ["hercules-network"]
 edition = "2018"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [package.metadata.docs.rs]
 targets = ['x86_64-unknown-linux-gnu']
@@ -14,9 +13,9 @@ frame-support = { version = "3.0.0", default-features = false }
 frame-system = { version = "3.0.0", default-features = false }
 sp-std = { version = "3.0.0", default-features = false }
 sp-runtime = { version = "3.0.0", default-features = false }
-sp-io = { version = "3.0.0", default-features = false }
+sp-io = { version = "3.0.0", default-features = false}
 sp-core = { version = "3.0.0", default-features = false }
-transaction-payment = { version = "3.0.0", package = 'pallet-transaction-payment', default-features = false }
+transaction-payment = { version = "3.0.0", package = 'pallet-transaction-payment', default-features = false}
 # third-party dependencies
 serde = { version = "1.0.102", features = ["derive"] }
 
@@ -27,11 +26,11 @@ orml-traits = { default-features = false, version = '0.4.0' }
 
 pallet-nft-multi = { path = "../nft-multi", default-features = false }
 module-support = { package = "module-support",  path = "../../support", default-features = false }
-her-primitives = { path = "../../primitives", default-features = false }
+lyra-primitives = { path = "../../primitives", default-features = false }
 
 [dev-dependencies]
-sp-core = { version = "3.0.0" }
-pallet-balances = { version = "3.0.0" }
+sp-core = { version = "3.0.0"}
+pallet-balances = { version = "3.0.0"}
 
 [features]
 default = ['std']
@@ -48,5 +47,5 @@ std = [
     "orml-traits/std",
     "orml-currencies/std",
     "orml-tokens/std",
-    "her-primitives/std",
+    "lyra-primitives/std",
 ]

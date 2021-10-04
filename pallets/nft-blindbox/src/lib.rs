@@ -24,7 +24,7 @@ use sp_runtime::{
 };
 use sp_std::prelude::*;
 use module_support::NftManager;
-use her_primitives::CurrencyId;
+use lyra_primitives::CurrencyId;
 use orml_traits::MultiCurrency;
 use pallet_nft_multi as pallet_nft;
 
@@ -471,9 +471,9 @@ decl_module! {
 
 impl<T: Config> Module<T> {
     /// The account ID of the NFT.
-    ///
-    /// This actually does computation. If you need to keep using it, then make sure you cache the
-    /// value and only call this once.
+	///
+	/// This actually does computation. If you need to keep using it, then make sure you cache the
+	/// value and only call this once.
     pub fn nft_account_id() -> T::AccountId {
         T::LockModuleId::get().into_account()
     }

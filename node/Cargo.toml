@@ -1,12 +1,15 @@
 [package]
-name = "her"
-version = "0.1.0"
+authors = ["hercules-network"]
+build = "build.rs"
+description = "Hercules Runtime Module Library Node"
 edition = "2018"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+homepage = "https://substrate.dev"
+name = "lyra"
+repository = "https://github.com/hercules-network/lyra"
+version = "0.1.0"
 
 [[bin]]
-name = 'her'
+name = 'lyra'
 
 [package.metadata.docs.rs]
 targets = ['x86_64-unknown-linux-gnu']

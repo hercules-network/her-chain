@@ -43,8 +43,8 @@ impl crate::WeightInfo for () {
     }
 
     fn cancel_blind_box() -> Weight {
-        (66_234_000 as Weight)
-            .saturating_add(DbWeight::get().reads(5 as Weight))
-            .saturating_add(DbWeight::get().writes(3 as Weight))
+            (66_234_000 as Weight)
+                .saturating_add(DbWeight::get().reads(5 as Weight))
+                .saturating_add(DbWeight::get().writes(3 as Weight))
     }
 }

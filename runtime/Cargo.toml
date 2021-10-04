@@ -1,9 +1,11 @@
 [package]
-name = "node-template-runtime"
-version = "0.1.0"
-edition = "2018"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+authors = ['Substrate DevHub <https://github.com/substrate-developer-hub>']
+edition = '2018'
+homepage = 'https://substrate.dev'
+license = 'Unlicense'
+name = 'node-template-runtime'
+repository = 'https://github.com/substrate-developer-hub/substrate-node-template/'
+version = '3.0.0'
 
 [package.metadata.docs.rs]
 targets = ['x86_64-unknown-linux-gnu']
@@ -23,7 +25,7 @@ hex-literal = { optional = true, version = '0.3.1' }
 serde = { features = ['derive'], optional = true, version = '1.0.119' }
 
 # local dependencies
-pallet-template = { path = '../pallets/template', default-features = false }
+pallet-template = { path = '../pallets/template', default-features = false, version = '3.0.0' }
 
 # Substrate dependencies
 frame-benchmarking = { default-features = false, optional = true, version = '3.0.0' }
@@ -40,9 +42,9 @@ pallet-sudo = { default-features = false, version = '3.0.0' }
 pallet-timestamp = { default-features = false, version = '3.0.0' }
 pallet-transaction-payment = { default-features = false, version = '3.0.0' }
 pallet-transaction-payment-rpc-runtime-api = { default-features = false, version = '3.0.0' }
-# her
+# lyra
 pallet-assets = { default-features = false, path = "../pallets/assets" }
-primitives = { package = "her-primitives", path = "../primitives", default-features = false }
+primitives = { package = "lyra-primitives", path = "../primitives", default-features = false }
 
 sp-api = { default-features = false, version = '3.0.0' }
 sp-block-builder = { default-features = false, version = '3.0.0' }

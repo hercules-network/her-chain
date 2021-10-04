@@ -28,7 +28,7 @@ use sp_std::prelude::*;
 use sp_core::H160;
 use sha3::{Digest, Keccak256};
 use support::{NftManager};
-use her_primitives::CurrencyId;
+use lyra_primitives::CurrencyId;
 
 mod default_weight;
 
@@ -1507,9 +1507,9 @@ decl_module! {
 
 impl<T: Config> Module<T> {
     /// The account ID of the NFT.
-    ///
-    /// This actually does computation. If you need to keep using it, then make sure you cache the
-    /// value and only call this once.
+	///
+	/// This actually does computation. If you need to keep using it, then make sure you cache the
+	/// value and only call this once.
     pub fn nft_account_id() -> T::AccountId {
         T::ModuleId::get().into_account()
     }
@@ -1706,11 +1706,11 @@ impl<T: Config> Module<T> {
         if <WhiteList<T>>::contains_key(collection_id){
             let wl = <WhiteList<T>>::get(collection_id);
             if !wl.contains(&address.clone()) {
-                panic!("{}", mes);
+				panic!("{}", mes);
             }
         }
         else {
-            panic!("{}", mes);
+			panic!("{}", mes);
         }
         Ok(())
     }
