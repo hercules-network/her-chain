@@ -4,12 +4,12 @@ use crate::{ApprovePermissions, CollectionMode, AccessMode, Ownership};
 use frame_support::{assert_noop, assert_ok};
 
 #[test]
-fn create_nft_item() {
+fn create_nfr_item() {
     new_test_ext().execute_with(|| {
         let col_name1: Vec<u16> = "Test1\0".encode_utf16().collect::<Vec<u16>>();
         let col_desc1: Vec<u16> = "TestDescription1\0".encode_utf16().collect::<Vec<u16>>();
         let token_prefix1: Vec<u8> = b"token_prefix1\0".to_vec();
-        let mode: CollectionMode = CollectionMode::NFT(2000);
+        let mode: CollectionMode = CollectionMode::NFR(2000);
 
         let origin1 = Origin::signed(1);
         assert_ok!(TemplateModule::create_collection(
@@ -27,7 +27,7 @@ fn create_nft_item() {
             [1, 2, 3].to_vec(),
             1
         ));
-        assert_eq!(TemplateModule::nft_item_id(1, 1).data, [1, 2, 3].to_vec());
+        assert_eq!(TemplateModule::nfr_item_id(1, 1).data, [1, 2, 3].to_vec());
     });
 }
 
@@ -255,12 +255,12 @@ fn transfer_refungible_item() {
 }
 
 #[test]
-fn transfer_nft_item() {
+fn transfer_nfr_item() {
     new_test_ext().execute_with(|| {
         let col_name1: Vec<u16> = "Test1\0".encode_utf16().collect::<Vec<u16>>();
         let col_desc1: Vec<u16> = "TestDescription1\0".encode_utf16().collect::<Vec<u16>>();
         let token_prefix1: Vec<u8> = b"token_prefix1\0".to_vec();
-        let mode: CollectionMode = CollectionMode::NFT(2000);
+        let mode: CollectionMode = CollectionMode::NFR(2000);
 
         let origin1 = Origin::signed(1);
         assert_ok!(TemplateModule::create_collection(
@@ -278,13 +278,13 @@ fn transfer_nft_item() {
             [1, 2, 3].to_vec(),
             1
         ));
-        assert_eq!(TemplateModule::nft_item_id(1, 1).data, [1, 2, 3].to_vec());
+        assert_eq!(TemplateModule::nfr_item_id(1, 1).data, [1, 2, 3].to_vec());
         assert_eq!(TemplateModule::balance_count(1, 1), 1);
         assert_eq!(TemplateModule::address_tokens(1, 1), [1]);
 
         // default scenario
         assert_ok!(TemplateModule::transfer(origin1.clone(), 2, 1, 1, 1000));
-        assert_eq!(TemplateModule::nft_item_id(1, 1).owner, 2);
+        assert_eq!(TemplateModule::nfr_item_id(1, 1).owner, 2);
         assert_eq!(TemplateModule::balance_count(1, 1), 0);
         assert_eq!(TemplateModule::balance_count(1, 2), 1);
         assert_eq!(TemplateModule::address_tokens(1, 1), []);
@@ -293,12 +293,12 @@ fn transfer_nft_item() {
 }
 
 #[test]
-fn nft_approve_and_transfer_from() {
+fn nfr_approve_and_transfer_from() {
     new_test_ext().execute_with(|| {
         let col_name1: Vec<u16> = "Test1\0".encode_utf16().collect::<Vec<u16>>();
         let col_desc1: Vec<u16> = "TestDescription1\0".encode_utf16().collect::<Vec<u16>>();
         let token_prefix1: Vec<u8> = b"token_prefix1\0".to_vec();
-        let mode: CollectionMode = CollectionMode::NFT(2000);
+        let mode: CollectionMode = CollectionMode::NFR(2000);
 
         let origin1 = Origin::signed(1);
         let origin2 = Origin::signed(2);
@@ -317,7 +317,7 @@ fn nft_approve_and_transfer_from() {
             [1, 2, 3].to_vec(),
             1
         ));
-        assert_eq!(TemplateModule::nft_item_id(1, 1).data, [1, 2, 3].to_vec());
+        assert_eq!(TemplateModule::nfr_item_id(1, 1).data, [1, 2, 3].to_vec());
         assert_eq!(TemplateModule::balance_count(1, 1), 1);
         assert_eq!(TemplateModule::address_tokens(1, 1), [1]);
 
@@ -528,7 +528,7 @@ fn change_collection_owner() {
         let col_name1: Vec<u16> = "Test1\0".encode_utf16().collect::<Vec<u16>>();
         let col_desc1: Vec<u16> = "TestDescription1\0".encode_utf16().collect::<Vec<u16>>();
         let token_prefix1: Vec<u8> = b"token_prefix1\0".to_vec();
-        let mode: CollectionMode = CollectionMode::NFT(2000);
+        let mode: CollectionMode = CollectionMode::NFR(2000);
 
         let origin1 = Origin::signed(1);
         assert_ok!(TemplateModule::create_collection(
@@ -553,7 +553,7 @@ fn destroy_collection() {
         let col_name1: Vec<u16> = "Test1\0".encode_utf16().collect::<Vec<u16>>();
         let col_desc1: Vec<u16> = "TestDescription1\0".encode_utf16().collect::<Vec<u16>>();
         let token_prefix1: Vec<u8> = b"token_prefix1\0".to_vec();
-        let mode: CollectionMode = CollectionMode::NFT(2000);
+        let mode: CollectionMode = CollectionMode::NFR(2000);
 
         let origin1 = Origin::signed(1);
         assert_ok!(TemplateModule::create_collection(
@@ -568,12 +568,12 @@ fn destroy_collection() {
 }
 
 #[test]
-fn burn_nft_item() {
+fn burn_nfr_item() {
     new_test_ext().execute_with(|| {
         let col_name1: Vec<u16> = "Test1\0".encode_utf16().collect::<Vec<u16>>();
         let col_desc1: Vec<u16> = "TestDescription1\0".encode_utf16().collect::<Vec<u16>>();
         let token_prefix1: Vec<u8> = b"token_prefix1\0".to_vec();
-        let mode: CollectionMode = CollectionMode::NFT(2000);
+        let mode: CollectionMode = CollectionMode::NFR(2000);
 
         let origin1 = Origin::signed(1);
         assert_ok!(TemplateModule::create_collection(
@@ -591,7 +591,7 @@ fn burn_nft_item() {
             1
         ));
 
-        assert_eq!(TemplateModule::nft_item_id(1, 1).data, [1, 2, 3].to_vec());
+        assert_eq!(TemplateModule::nfr_item_id(1, 1).data, [1, 2, 3].to_vec());
 
         // check balance (collection with id = 1, user id = 1)
         assert_eq!(TemplateModule::balance_count(1, 1), 1);
@@ -700,7 +700,7 @@ fn add_collection_admin() {
         let col_name1: Vec<u16> = "Test1\0".encode_utf16().collect::<Vec<u16>>();
         let col_desc1: Vec<u16> = "TestDescription1\0".encode_utf16().collect::<Vec<u16>>();
         let token_prefix1: Vec<u8> = b"token_prefix1\0".to_vec();
-        let mode: CollectionMode = CollectionMode::NFT(2000);
+        let mode: CollectionMode = CollectionMode::NFR(2000);
 
         let origin1 = Origin::signed(1);
         let origin2 = Origin::signed(2);
@@ -746,7 +746,7 @@ fn remove_collection_admin() {
         let col_name1: Vec<u16> = "Test1\0".encode_utf16().collect::<Vec<u16>>();
         let col_desc1: Vec<u16> = "TestDescription1\0".encode_utf16().collect::<Vec<u16>>();
         let token_prefix1: Vec<u8> = b"token_prefix1\0".to_vec();
-        let mode: CollectionMode = CollectionMode::NFT(2000);
+        let mode: CollectionMode = CollectionMode::NFR(2000);
 
         let origin1 = Origin::signed(1);
         let origin2 = Origin::signed(2);
@@ -801,7 +801,7 @@ fn balance_of() {
         let col_name1: Vec<u16> = "Test1\0".encode_utf16().collect::<Vec<u16>>();
         let col_desc1: Vec<u16> = "TestDescription1\0".encode_utf16().collect::<Vec<u16>>();
         let token_prefix1: Vec<u8> = b"token_prefix1\0".to_vec();
-        let nft_mode: CollectionMode = CollectionMode::NFT(2000);
+        let nfr_mode: CollectionMode = CollectionMode::NFR(2000);
         let furg_mode: CollectionMode = CollectionMode::Fungible(3);
         let refung_mode: CollectionMode = CollectionMode::ReFungible(2000, 3);
 
@@ -812,7 +812,7 @@ fn balance_of() {
             col_name1.clone(),
             col_desc1.clone(),
             token_prefix1.clone(),
-            nft_mode.clone()
+            nfr_mode.clone()
         ));
         assert_ok!(TemplateModule::create_collection(
             origin1.clone(),
@@ -864,7 +864,7 @@ fn balance_of() {
         assert_eq!(TemplateModule::balance_count(1, 1), 1);
         assert_eq!(TemplateModule::balance_count(2, 1), 1000);
         assert_eq!(TemplateModule::balance_count(3, 1), 1000);
-        assert_eq!(TemplateModule::nft_item_id(1, 1).owner, 1);
+        assert_eq!(TemplateModule::nfr_item_id(1, 1).owner, 1);
         assert_eq!(TemplateModule::fungible_item_id(2, 1).owner, 1);
         assert_eq!(TemplateModule::refungible_item_id(3, 1).owner[0].owner, 1);
     });
@@ -876,7 +876,7 @@ fn approve() {
         let col_name1: Vec<u16> = "Test1\0".encode_utf16().collect::<Vec<u16>>();
         let col_desc1: Vec<u16> = "TestDescription1\0".encode_utf16().collect::<Vec<u16>>();
         let token_prefix1: Vec<u8> = b"token_prefix1\0".to_vec();
-        let nft_mode: CollectionMode = CollectionMode::NFT(2000);
+        let nfr_mode: CollectionMode = CollectionMode::NFR(2000);
         let origin1 = Origin::signed(1);
 
         assert_ok!(TemplateModule::create_collection(
@@ -884,7 +884,7 @@ fn approve() {
             col_name1.clone(),
             col_desc1.clone(),
             token_prefix1.clone(),
-            nft_mode.clone()
+            nfr_mode.clone()
         ));
 
         assert_eq!(TemplateModule::collection(1).owner, 1);
@@ -909,7 +909,7 @@ fn transfer_from() {
         let col_name1: Vec<u16> = "Test1\0".encode_utf16().collect::<Vec<u16>>();
         let col_desc1: Vec<u16> = "TestDescription1\0".encode_utf16().collect::<Vec<u16>>();
         let token_prefix1: Vec<u8> = b"token_prefix1\0".to_vec();
-        let mode: CollectionMode = CollectionMode::NFT(2000);
+        let mode: CollectionMode = CollectionMode::NFR(2000);
         let origin1 = Origin::signed(1);
         let origin2 = Origin::signed(2);
 

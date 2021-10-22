@@ -23,10 +23,10 @@ use sp_runtime::{
     traits::{AccountIdConversion}, RuntimeDebug,
 };
 use sp_std::prelude::*;
-use module_support::NftManager;
+use module_support::NfrManager;
 use lyra_primitives::CurrencyId;
 use orml_traits::MultiCurrency;
-use pallet_nft_multi as pallet_nft;
+use pallet_nfr_multi as pallet_nfr;
 
 mod default_weight;
 pub mod migration;
@@ -57,7 +57,7 @@ impl Default for StorageVersion {
 }
 
 #[derive(Encode, Decode, Default, Clone, PartialEq, RuntimeDebug)]
-pub struct NftCard {
+pub struct NfrCard {
     pub group_id: u64,
     pub collection_id: u64,
     pub item_id: u64,
@@ -81,12 +81,12 @@ pub struct BlindboxItem<AccountId, BlockNumber> {
     pub has_ended: bool,
 }
 
-pub trait Config: system::Config + pallet_nft::Config {
-    /// The NFT's module id, used for deriving its sovereign account ID.
+pub trait Config: system::Config + pallet_nfr::Config {
+    /// The NFR's module id, used for deriving its sovereign account ID.
     type LockModuleId: Get<ModuleId>;
 
-    /// Nft manager.
-    type NftHandler: NftManager<Self::AccountId, Self::BlockNumber>;
+    /// Nfr manager.
+    type NfrHandler: NfrManager<Self::AccountId, Self::BlockNumber>;
 
     type Event: From<Event<Self>> + Into<<Self as system::Config>::Event>;
 
@@ -99,7 +99,7 @@ pub trait Config: system::Config + pallet_nft::Config {
 }
 
 decl_storage! {
-    trait Store for Module<T: Config> as NftBlindBox {
+    trait Store for Module<T: Config> as NfrBlindBox {
         /// Next CardGroup id
         pub NextCardGroupID: u64 = 1;
 
@@ -110,7 +110,7 @@ decl_storage! {
         pub NextSeed: u32 = 1;
 
         /// CardGroup List
-        pub CardGroupList get(fn get_card_group): map hasher(identity) u64 => NftCard;
+        pub CardGroupList get(fn get_card_group): map hasher(identity) u64 => NfrCard;
 
         /// BlindBox List
         pub BlindBoxList get(fn get_blind_box): map hasher(identity) u64 => BlindboxItem<T::AccountId, T::BlockNumber>;
@@ -153,7 +153,7 @@ decl_module! {
         // Errors must be initialized if they are used by the pallet.
 		type Error = Error<T>;
 
-        /// The NFT's module id, used for deriving its sovereign account ID.
+        /// The NFR's module id, used for deriving its sovereign account ID.
 		const ModuleId: ModuleId = T::LockModuleId::get();
 
         fn deposit_event() = default;
@@ -202,18 +202,18 @@ decl_module! {
                 panic!("{}", mes);
             }
 
-            let target_collection = pallet_nft::Module::<T>::collection(collection_id);
-            let locker = Self::nft_account_id();
+            let target_collection = pallet_nfr::Module::<T>::collection(collection_id);
+            let locker = Self::nfr_account_id();
 
-            if let pallet_nft::CollectionMode::NFT(_) = target_collection.mode {
+            if let pallet_nfr::CollectionMode::NFR(_) = target_collection.mode {
                 card_value = 1;
             };
 
             match target_collection.mode
             {
-                pallet_nft::CollectionMode::NFT(_) => T::NftHandler::transfer_nft(collection_id, item_id, sender.clone(), locker)?,
-                pallet_nft::CollectionMode::Fungible(_)  => T::NftHandler::transfer_fungible(collection_id, item_id, value, sender.clone(), locker)?,
-                pallet_nft::CollectionMode::ReFungible(_, _)  => T::NftHandler::transfer_refungible(collection_id, item_id, value, sender.clone(), locker)?,
+                pallet_nfr::CollectionMode::NFR(_) => T::NfrHandler::transfer_nfr(collection_id, item_id, sender.clone(), locker)?,
+                pallet_nfr::CollectionMode::Fungible(_)  => T::NfrHandler::transfer_fungible(collection_id, item_id, value, sender.clone(), locker)?,
+                pallet_nfr::CollectionMode::ReFungible(_, _)  => T::NfrHandler::transfer_refungible(collection_id, item_id, value, sender.clone(), locker)?,
                 _ => ()
             };
 
@@ -224,7 +224,7 @@ decl_module! {
             let draw_start: u64 = blind_box.total_count.checked_add(1).unwrap();
             let draw_end: u64 = blind_box.total_count.checked_add(value).unwrap();
 
-            let nft_card = NftCard {
+            let nfr_card = NfrCard {
                 group_id: group_id,
                 collection_id: collection_id,
                 item_id: item_id,
@@ -234,11 +234,11 @@ decl_module! {
                 draw_end: draw_end,
             };
 
-            CardGroupList::insert(group_id, nft_card.clone());
+            CardGroupList::insert(group_id, nfr_card.clone());
             NextCardGroupID::mutate(|id| *id += 1);
 
             let mut card_group = blind_box.clone().card_group;
-            card_group.push(nft_card.group_id);
+            card_group.push(nfr_card.group_id);
 
             <BlindBoxList<T>>::mutate(blind_box_id, |blind_box| {
                 blind_box.card_group = card_group;
@@ -269,13 +269,13 @@ decl_module! {
                 panic!("{}", mes);
             }
 
-            let target_collection = pallet_nft::Module::<T>::collection(collection_id);
-            let locker = Self::nft_account_id();
+            let target_collection = pallet_nfr::Module::<T>::collection(collection_id);
+            let locker = Self::nfr_account_id();
             if card_value > 0 {
                 match target_collection.mode {
-                    pallet_nft::CollectionMode::NFT(_) => T::NftHandler::transfer_nft(card_group.collection_id, card_group.item_id, locker.clone(), sender.clone())?,
-                    pallet_nft::CollectionMode::Fungible(_)  => T::NftHandler::transfer_fungible(card_group.collection_id, card_group.item_id, card_value, locker.clone(), sender.clone())?,
-                    pallet_nft::CollectionMode::ReFungible(_, _)  => T::NftHandler::transfer_refungible(card_group.collection_id, card_group.item_id, card_value, locker.clone(), sender.clone())?,
+                    pallet_nfr::CollectionMode::NFR(_) => T::NfrHandler::transfer_nfr(card_group.collection_id, card_group.item_id, locker.clone(), sender.clone())?,
+                    pallet_nfr::CollectionMode::Fungible(_)  => T::NfrHandler::transfer_fungible(card_group.collection_id, card_group.item_id, card_value, locker.clone(), sender.clone())?,
+                    pallet_nfr::CollectionMode::ReFungible(_, _)  => T::NfrHandler::transfer_refungible(card_group.collection_id, card_group.item_id, card_value, locker.clone(), sender.clone())?,
                     _ => ()
                 };
                 CardGroupList::remove(card_group_id);
@@ -365,18 +365,18 @@ decl_module! {
                 choose_group_id = mode2_choose_group_id;
             }
             let card_group = Self::get_card_group(choose_group_id);
-            let locker = Self::nft_account_id();
+            let locker = Self::nfr_account_id();
 
             if blind_box.price > 0 {
-                <T as pallet_nft::Config>::MultiCurrency::transfer(currency_id, &sender, &blind_box.owner, blind_box.price.into())?;
+                <T as pallet_nfr::Config>::MultiCurrency::transfer(currency_id, &sender, &blind_box.owner, blind_box.price.into())?;
             }
 
-            let target_collection = pallet_nft::Module::<T>::collection(card_group.collection_id);
+            let target_collection = pallet_nfr::Module::<T>::collection(card_group.collection_id);
             match target_collection.mode
             {
-                pallet_nft::CollectionMode::NFT(_) => T::NftHandler::transfer_nft(card_group.collection_id, card_group.item_id, locker, receive_user.clone())?,
-                pallet_nft::CollectionMode::Fungible(_)  => T::NftHandler::transfer_fungible(card_group.collection_id, card_group.item_id, 1, locker, receive_user.clone())?,
-                pallet_nft::CollectionMode::ReFungible(_, _)  => T::NftHandler::transfer_refungible(card_group.collection_id, card_group.item_id, 1, locker, receive_user.clone())?,
+                pallet_nfr::CollectionMode::NFR(_) => T::NfrHandler::transfer_nfr(card_group.collection_id, card_group.item_id, locker, receive_user.clone())?,
+                pallet_nfr::CollectionMode::Fungible(_)  => T::NfrHandler::transfer_fungible(card_group.collection_id, card_group.item_id, 1, locker, receive_user.clone())?,
+                pallet_nfr::CollectionMode::ReFungible(_, _)  => T::NfrHandler::transfer_refungible(card_group.collection_id, card_group.item_id, 1, locker, receive_user.clone())?,
                 _ => ()
             };
 
@@ -445,16 +445,16 @@ decl_module! {
             }
             let blind_box = Self::get_blind_box(blind_box_id);
             ensure!(blind_box.has_ended == true, Error::<T>::BlindBoxIsNotEnded);
-            let locker = Self::nft_account_id();
+            let locker = Self::nfr_account_id();
 
             for card_group_id in blind_box.card_group.iter() {
                 let card_group = Self::get_card_group(card_group_id);
                 if card_group.remaind_value > 0 {
-                    let target_collection = pallet_nft::Module::<T>::collection(card_group.collection_id);
+                    let target_collection = pallet_nfr::Module::<T>::collection(card_group.collection_id);
                     match target_collection.mode {
-                        pallet_nft::CollectionMode::NFT(_) => T::NftHandler::transfer_nft(card_group.collection_id, card_group.item_id, locker.clone(), sender.clone())?,
-                        pallet_nft::CollectionMode::Fungible(_)  => T::NftHandler::transfer_fungible(card_group.collection_id, card_group.item_id, card_group.remaind_value, locker.clone(), sender.clone())?,
-                        pallet_nft::CollectionMode::ReFungible(_, _)  => T::NftHandler::transfer_refungible(card_group.collection_id, card_group.item_id, card_group.remaind_value, locker.clone(), sender.clone())?,
+                        pallet_nfr::CollectionMode::NFR(_) => T::NfrHandler::transfer_nfr(card_group.collection_id, card_group.item_id, locker.clone(), sender.clone())?,
+                        pallet_nfr::CollectionMode::Fungible(_)  => T::NfrHandler::transfer_fungible(card_group.collection_id, card_group.item_id, card_group.remaind_value, locker.clone(), sender.clone())?,
+                        pallet_nfr::CollectionMode::ReFungible(_, _)  => T::NfrHandler::transfer_refungible(card_group.collection_id, card_group.item_id, card_group.remaind_value, locker.clone(), sender.clone())?,
                         _ => ()
                     };
                 }
@@ -470,11 +470,11 @@ decl_module! {
 }
 
 impl<T: Config> Module<T> {
-    /// The account ID of the NFT.
+    /// The account ID of the NFR.
 	///
 	/// This actually does computation. If you need to keep using it, then make sure you cache the
 	/// value and only call this once.
-    pub fn nft_account_id() -> T::AccountId {
+    pub fn nfr_account_id() -> T::AccountId {
         T::LockModuleId::get().into_account()
     }
 
@@ -500,7 +500,7 @@ impl<T: Config> Module<T> {
     }
 
     fn generate_random_number(seed: u32) -> u32 {
-        let random_seed = T::Randomness::random(&(Self::nft_account_id(), seed).encode());
+        let random_seed = T::Randomness::random(&(Self::nfr_account_id(), seed).encode());
         let random_number = <u32>::decode(&mut random_seed.as_ref())
             .expect("secure hashes should always be bigger than u32; qed");
         random_number

@@ -4115,7 +4115,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "pallet-nft"
+name = "pallet-nfr"
 version = "0.1.0"
 dependencies = [
  "frame-support",
@@ -4134,7 +4134,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "pallet-nft-auction"
+name = "pallet-nfr-auction"
 version = "0.1.0"
 dependencies = [
  "frame-support",
@@ -4145,7 +4145,7 @@ dependencies = [
  "orml-tokens",
  "orml-traits",
  "pallet-balances",
- "pallet-nft-multi",
+ "pallet-nfr-multi",
  "pallet-transaction-payment",
  "parity-scale-codec",
  "serde",
@@ -4156,7 +4156,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "pallet-nft-blindbox"
+name = "pallet-nfr-blindbox"
 version = "0.1.0"
 dependencies = [
  "frame-support",
@@ -4167,7 +4167,7 @@ dependencies = [
  "orml-tokens",
  "orml-traits",
  "pallet-balances",
- "pallet-nft-multi",
+ "pallet-nfr-multi",
  "pallet-transaction-payment",
  "parity-scale-codec",
  "serde",
@@ -4178,7 +4178,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "pallet-nft-multi"
+name = "pallet-nfr-multi"
 version = "0.1.0"
 dependencies = [
  "frame-support",
@@ -4201,7 +4201,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "pallet-nft-trade"
+name = "pallet-nfr-trade"
 version = "0.1.0"
 dependencies = [
  "frame-support",
@@ -4212,7 +4212,7 @@ dependencies = [
  "orml-tokens",
  "orml-traits",
  "pallet-balances",
- "pallet-nft-multi",
+ "pallet-nfr-multi",
  "pallet-transaction-payment",
  "parity-scale-codec",
  "serde",

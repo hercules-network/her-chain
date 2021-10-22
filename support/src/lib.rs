@@ -6,8 +6,8 @@ use lyra_primitives::CurrencyId;
 
 pub type Price = FixedU128;
 
-pub trait NftManager<AccountId, BlockNumber> {
-    fn transfer_nft(collection_id: u64, item_id: u64, sender: AccountId, new_owner: AccountId) -> DispatchResult;
+pub trait NfrManager<AccountId, BlockNumber> {
+    fn transfer_nfr(collection_id: u64, item_id: u64, sender: AccountId, new_owner: AccountId) -> DispatchResult;
     fn transfer_fungible(collection_id: u64, item_id: u64, value: u64, sender: AccountId, new_owner: AccountId) -> DispatchResult;
     fn transfer_refungible(collection_id: u64, item_id: u64, value: u64, sender: AccountId, new_owner: AccountId) -> DispatchResult;
     fn is_item_owner(subject: AccountId, collection_id: u64, item_id: u64) -> bool;

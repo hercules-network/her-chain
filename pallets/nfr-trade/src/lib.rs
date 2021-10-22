@@ -23,10 +23,10 @@ use sp_runtime::{
     traits::{AccountIdConversion}, RuntimeDebug,
 };
 use sp_std::prelude::*;
-use module_support::NftManager;
+use module_support::NfrManager;
 use lyra_primitives::CurrencyId;
 use orml_traits::MultiCurrency;
-use pallet_nft_multi as pallet_nft;
+use pallet_nfr_multi as pallet_nfr;
 
 mod default_weight;
 
@@ -74,12 +74,12 @@ pub struct SaleOrderHistory<AccountId, BlockNumber> {
     pub buy_time: BlockNumber,
 }
 
-pub trait Config: system::Config + pallet_nft::Config {
-    /// The NFT's module id, used for deriving its sovereign account ID.
+pub trait Config: system::Config + pallet_nfr::Config {
+    /// The NFR's module id, used for deriving its sovereign account ID.
     type LockModuleId: Get<ModuleId>;
 
-    /// Nft manager.
-    type NftHandler: NftManager<Self::AccountId, Self::BlockNumber>;
+    /// Nfr manager.
+    type NfrHandler: NfrManager<Self::AccountId, Self::BlockNumber>;
 
     type Event: From<Event<Self>> + Into<<Self as system::Config>::Event>;
 
@@ -88,10 +88,10 @@ pub trait Config: system::Config + pallet_nft::Config {
 }
 
 decl_storage! {
-    trait Store for Module<T: Config> as NftTrade {
+    trait Store for Module<T: Config> as NfrTrade {
 
         /// Consignment
-        pub SaleOrderList get(fn nft_trade_id): double_map hasher(blake2_128_concat) u64, hasher(blake2_128_concat) u64 => SaleOrder<T::AccountId>;
+        pub SaleOrderList get(fn nfr_trade_id): double_map hasher(blake2_128_concat) u64, hasher(blake2_128_concat) u64 => SaleOrder<T::AccountId>;
 
         /// Consignment SaleOrder by order_id
         pub SaleOrderByIdList get(fn sale_order_id): map hasher(identity) u64 => SaleOrder<T::AccountId>;
@@ -103,7 +103,7 @@ decl_storage! {
         pub SeparableSaleOrderList get(fn separablet_order_list_id):double_map hasher(blake2_128_concat) u64, hasher(blake2_128_concat) u64 => Vec<u64>;
 
         /// Sales history
-        pub HistorySaleOrderList get(fn nft_trade_history_id): double_map hasher(blake2_128_concat) u64, hasher(blake2_128_concat) u64 => Vec<SaleOrderHistory<T::AccountId, T::BlockNumber>>;
+        pub HistorySaleOrderList get(fn nfr_trade_history_id): double_map hasher(blake2_128_concat) u64, hasher(blake2_128_concat) u64 => Vec<SaleOrderHistory<T::AccountId, T::BlockNumber>>;
 
         /// Next Order id
         pub NextOrderID: u64 = 1;
@@ -128,7 +128,7 @@ decl_event!(
 decl_error! {
 	pub enum Error for Module<T: Config> {
 		SaleOrderNotExists,
-        AccountNotNftOwner,
+        AccountNotNfrOwner,
 	}
 }
 
@@ -137,7 +137,7 @@ decl_module! {
         // Errors must be initialized if they are used by the pallet.
 		type Error = Error<T>;
 
-        /// The NFT's module id, used for deriving its sovereign account ID.
+        /// The NFR's module id, used for deriving its sovereign account ID.
 		const ModuleId: ModuleId = T::LockModuleId::get();
 
         fn deposit_event() = default;
@@ -146,22 +146,22 @@ decl_module! {
         pub fn create_sale_order(origin, collection_id: u64, item_id: u64, value: u64, currency_id: CurrencyId, price: u64) -> DispatchResult {
             let sender = ensure_signed(origin)?;
 
-            let item_owner = T::NftHandler::is_item_owner(sender.clone(), collection_id, item_id);
-            ensure!(item_owner, Error::<T>::AccountNotNftOwner);
+            let item_owner = T::NfrHandler::is_item_owner(sender.clone(), collection_id, item_id);
+            ensure!(item_owner, Error::<T>::AccountNotNfrOwner);
 
-            let target_collection = pallet_nft::Module::<T>::collection(collection_id);
-            let recipient = Self::nft_account_id();
+            let target_collection = pallet_nfr::Module::<T>::collection(collection_id);
+            let recipient = Self::nfr_account_id();
             let mut card_value: u64 = value;
 
-            if let pallet_nft::CollectionMode::NFT(_) = target_collection.mode {
+            if let pallet_nfr::CollectionMode::NFR(_) = target_collection.mode {
                 card_value = 1;
             };
 
             match target_collection.mode
             {
-                pallet_nft::CollectionMode::NFT(_) => T::NftHandler::transfer_nft(collection_id, item_id, sender.clone(), recipient)?,
-                pallet_nft::CollectionMode::Fungible(_)  => T::NftHandler::transfer_fungible(collection_id, item_id, card_value, sender.clone(), recipient)?,
-                pallet_nft::CollectionMode::ReFungible(_, _)  => T::NftHandler::transfer_refungible(collection_id, item_id, card_value, sender.clone(), recipient)?,
+                pallet_nfr::CollectionMode::NFR(_) => T::NfrHandler::transfer_nfr(collection_id, item_id, sender.clone(), recipient)?,
+                pallet_nfr::CollectionMode::Fungible(_)  => T::NfrHandler::transfer_fungible(collection_id, item_id, card_value, sender.clone(), recipient)?,
+                pallet_nfr::CollectionMode::ReFungible(_, _)  => T::NfrHandler::transfer_refungible(collection_id, item_id, card_value, sender.clone(), recipient)?,
                 _ => ()
             };
 
@@ -201,14 +201,14 @@ decl_module! {
                 panic!("{}", mes);
             }
 
-            let target_collection = pallet_nft::Module::<T>::collection(collection_id);
-            let locker = Self::nft_account_id();
+            let target_collection = pallet_nfr::Module::<T>::collection(collection_id);
+            let locker = Self::nfr_account_id();
 
             match target_collection.mode
             {
-                pallet_nft::CollectionMode::NFT(_) => T::NftHandler::transfer_nft(collection_id, item_id, locker, sender.clone())?,
-                pallet_nft::CollectionMode::Fungible(_)  => T::NftHandler::transfer_fungible(collection_id, item_id, target_sale_order.value, locker, sender.clone())?,
-                pallet_nft::CollectionMode::ReFungible(_, _)  => T::NftHandler::transfer_refungible(collection_id, item_id, target_sale_order.value, locker, sender.clone())?,
+                pallet_nfr::CollectionMode::NFR(_) => T::NfrHandler::transfer_nfr(collection_id, item_id, locker, sender.clone())?,
+                pallet_nfr::CollectionMode::Fungible(_)  => T::NfrHandler::transfer_fungible(collection_id, item_id, target_sale_order.value, locker, sender.clone())?,
+                pallet_nfr::CollectionMode::ReFungible(_, _)  => T::NfrHandler::transfer_refungible(collection_id, item_id, target_sale_order.value, locker, sender.clone())?,
                 _ => ()
             };
 
@@ -226,25 +226,25 @@ decl_module! {
             ensure!(<SaleOrderList<T>>::contains_key(collection_id, item_id), Error::<T>::SaleOrderNotExists);
 
             let target_sale_order = <SaleOrderList<T>>::get(collection_id, item_id);
-            let nft_owner = target_sale_order.owner;
+            let nfr_owner = target_sale_order.owner;
             let price = target_sale_order.price;
             let order_id = target_sale_order.order_id;
             let currency_id = target_sale_order.currency_id;
             let buy_time = <system::Module<T>>::block_number();
 
-            let target_collection = pallet_nft::Module::<T>::collection(collection_id);
-            let locker = Self::nft_account_id();
+            let target_collection = pallet_nfr::Module::<T>::collection(collection_id);
+            let locker = Self::nfr_account_id();
 
-            T::NftHandler::charge_royalty(sender.clone(), collection_id, item_id, currency_id, price, buy_time)?;
+            T::NfrHandler::charge_royalty(sender.clone(), collection_id, item_id, currency_id, price, buy_time)?;
 
-            <T as pallet_nft::Config>::MultiCurrency::transfer(currency_id, &sender, &nft_owner, price.saturated_into())?;
+            <T as pallet_nfr::Config>::MultiCurrency::transfer(currency_id, &sender, &nfr_owner, price.saturated_into())?;
 
-            // Moves nft-multi from locker account into the buyer's account
+            // Moves nfr-multi from locker account into the buyer's account
             match target_collection.mode
             {
-                pallet_nft::CollectionMode::NFT(_) => T::NftHandler::transfer_nft(collection_id, item_id, locker, sender.clone())?,
-                pallet_nft::CollectionMode::Fungible(_)  => T::NftHandler::transfer_fungible(collection_id, item_id, target_sale_order.value, locker, sender.clone())?,
-                pallet_nft::CollectionMode::ReFungible(_, _)  => T::NftHandler::transfer_refungible(collection_id, item_id, target_sale_order.value, locker, sender.clone())?,
+                pallet_nfr::CollectionMode::NFR(_) => T::NfrHandler::transfer_nfr(collection_id, item_id, locker, sender.clone())?,
+                pallet_nfr::CollectionMode::Fungible(_)  => T::NfrHandler::transfer_fungible(collection_id, item_id, target_sale_order.value, locker, sender.clone())?,
+                pallet_nfr::CollectionMode::ReFungible(_, _)  => T::NfrHandler::transfer_refungible(collection_id, item_id, target_sale_order.value, locker, sender.clone())?,
                 _ => ()
             };
 
@@ -254,7 +254,7 @@ decl_module! {
                 item_id: item_id,
                 currency_id: currency_id,
                 value: target_sale_order.value,
-                seller: nft_owner.clone(),
+                seller: nfr_owner.clone(),
                 buyer: sender.clone(),
                 price: price,
                 buy_time: buy_time,
@@ -275,7 +275,7 @@ decl_module! {
             <SaleOrderByIdList<T>>::remove(order_id);
 
             // call event
-            Self::deposit_event(RawEvent::ItemOrderSucceed(collection_id, item_id, sender, nft_owner.clone(), order_id, target_sale_order.value, price, currency_id));
+            Self::deposit_event(RawEvent::ItemOrderSucceed(collection_id, item_id, sender, nfr_owner.clone(), order_id, target_sale_order.value, price, currency_id));
             Ok(())
         }
 
@@ -283,25 +283,25 @@ decl_module! {
         pub fn create_separable_sale_order(origin, collection_id: u64, item_id: u64, value: u64, currency_id: CurrencyId, price: u64 ) -> DispatchResult {
             let sender = ensure_signed(origin)?;
 
-            let item_owner = T::NftHandler::is_item_owner(sender.clone(), collection_id, item_id);
-            ensure!(item_owner, Error::<T>::AccountNotNftOwner);
+            let item_owner = T::NfrHandler::is_item_owner(sender.clone(), collection_id, item_id);
+            ensure!(item_owner, Error::<T>::AccountNotNfrOwner);
 
             let order_id = NextOrderID::get();
 
-            let target_collection = pallet_nft::Module::<T>::collection(collection_id);
+            let target_collection = pallet_nfr::Module::<T>::collection(collection_id);
 
-            let recipient = Self::nft_account_id();
+            let recipient = Self::nfr_account_id();
             let mut card_value: u64 = value;
 
-            if let pallet_nft::CollectionMode::NFT(_) = target_collection.mode {
+            if let pallet_nfr::CollectionMode::NFR(_) = target_collection.mode {
                 card_value = 1;
             };
 
             match target_collection.mode
             {
-                pallet_nft::CollectionMode::NFT(_) => T::NftHandler::transfer_nft(collection_id, item_id, sender.clone(), recipient)?,
-                pallet_nft::CollectionMode::Fungible(_)  => T::NftHandler::transfer_fungible(collection_id, item_id, card_value, sender.clone(), recipient)?,
-                pallet_nft::CollectionMode::ReFungible(_, _)  => T::NftHandler::transfer_refungible(collection_id, item_id, card_value, sender.clone(), recipient)?,
+                pallet_nfr::CollectionMode::NFR(_) => T::NfrHandler::transfer_nfr(collection_id, item_id, sender.clone(), recipient)?,
+                pallet_nfr::CollectionMode::Fungible(_)  => T::NfrHandler::transfer_fungible(collection_id, item_id, card_value, sender.clone(), recipient)?,
+                pallet_nfr::CollectionMode::ReFungible(_, _)  => T::NfrHandler::transfer_refungible(collection_id, item_id, card_value, sender.clone(), recipient)?,
                 _ => ()
             };
 
@@ -350,14 +350,14 @@ decl_module! {
                 panic!("{}", mes);
             }
 
-            let target_collection = pallet_nft::Module::<T>::collection(target_sale_order.collection_id);
-            let locker = Self::nft_account_id();
+            let target_collection = pallet_nfr::Module::<T>::collection(target_sale_order.collection_id);
+            let locker = Self::nfr_account_id();
 
             match target_collection.mode
             {
-                pallet_nft::CollectionMode::NFT(_) => T::NftHandler::transfer_nft(collection_id, item_id, locker, sender.clone())?,
-                pallet_nft::CollectionMode::Fungible(_)  => T::NftHandler::transfer_fungible(collection_id, item_id, target_sale_order.balance, locker, sender.clone())?,
-                pallet_nft::CollectionMode::ReFungible(_, _)  => T::NftHandler::transfer_refungible(collection_id, item_id, target_sale_order.balance, locker, sender.clone())?,
+                pallet_nfr::CollectionMode::NFR(_) => T::NfrHandler::transfer_nfr(collection_id, item_id, locker, sender.clone())?,
+                pallet_nfr::CollectionMode::Fungible(_)  => T::NfrHandler::transfer_fungible(collection_id, item_id, target_sale_order.balance, locker, sender.clone())?,
+                pallet_nfr::CollectionMode::ReFungible(_, _)  => T::NfrHandler::transfer_refungible(collection_id, item_id, target_sale_order.balance, locker, sender.clone())?,
                 _ => ()
             };
 
@@ -386,30 +386,30 @@ decl_module! {
             let target_sale_order = <SeparableSaleOrder<T>>::get(order_id);
             let collection_id = target_sale_order.collection_id;
             let item_id = target_sale_order.item_id;
-            let nft_owner = target_sale_order.owner;
+            let nfr_owner = target_sale_order.owner;
             let currency_id = target_sale_order.currency_id;
             let price = target_sale_order.price;
             let order_value = target_sale_order.value;
             let balance = target_sale_order.balance;
             let buy_time = <system::Module<T>>::block_number();
 
-            let target_collection = pallet_nft::Module::<T>::collection(collection_id);
-            let locker = Self::nft_account_id();
+            let target_collection = pallet_nfr::Module::<T>::collection(collection_id);
+            let locker = Self::nfr_account_id();
 
             ensure!(target_sale_order.balance >= value, "Value not enough");
             let remain_value = balance.checked_sub(value).unwrap();
             let checked_value = price.checked_mul(value).unwrap();
 
-            T::NftHandler::charge_royalty(sender.clone(), collection_id, item_id, currency_id, checked_value, buy_time)?;
+            T::NfrHandler::charge_royalty(sender.clone(), collection_id, item_id, currency_id, checked_value, buy_time)?;
 
-            <T as pallet_nft::Config>::MultiCurrency::transfer(currency_id, &sender, &nft_owner, checked_value.into())?;
+            <T as pallet_nfr::Config>::MultiCurrency::transfer(currency_id, &sender, &nfr_owner, checked_value.into())?;
 
-            // Moves nft-multi from locker account into the buyer's account
+            // Moves nfr-multi from locker account into the buyer's account
             match target_collection.mode
             {
-                pallet_nft::CollectionMode::NFT(_) => T::NftHandler::transfer_nft(collection_id, item_id, locker, sender.clone())?,
-                pallet_nft::CollectionMode::Fungible(_)  => T::NftHandler::transfer_fungible(collection_id, item_id, value, locker, sender.clone())?,
-                pallet_nft::CollectionMode::ReFungible(_, _)  => T::NftHandler::transfer_refungible(collection_id, item_id, value, locker, sender.clone())?,
+                pallet_nfr::CollectionMode::NFR(_) => T::NfrHandler::transfer_nfr(collection_id, item_id, locker, sender.clone())?,
+                pallet_nfr::CollectionMode::Fungible(_)  => T::NfrHandler::transfer_fungible(collection_id, item_id, value, locker, sender.clone())?,
+                pallet_nfr::CollectionMode::ReFungible(_, _)  => T::NfrHandler::transfer_refungible(collection_id, item_id, value, locker, sender.clone())?,
                 _ => ()
             };
 
@@ -419,7 +419,7 @@ decl_module! {
                 item_id: item_id,
                 currency_id: currency_id,
                 value: value,
-                seller: nft_owner.clone(),
+                seller: nfr_owner.clone(),
                 buyer: sender.clone(),
                 price: price,
                 buy_time: buy_time,
@@ -432,7 +432,7 @@ decl_module! {
                 currency_id: currency_id,
                 value: order_value,
                 balance: remain_value,
-                owner: nft_owner.clone(),
+                owner: nfr_owner.clone(),
                 price: price,
             };
 
@@ -467,18 +467,18 @@ decl_module! {
             }
 
             // call event
-            Self::deposit_event(RawEvent::ItemSeparableOrderSucceed(order_id, collection_id, item_id, value, sender, nft_owner, price, currency_id));
+            Self::deposit_event(RawEvent::ItemSeparableOrderSucceed(order_id, collection_id, item_id, value, sender, nfr_owner, price, currency_id));
             Ok(())
         }
     }
 }
 
 impl<T: Config> Module<T> {
-    /// The account ID of the NFT.
+    /// The account ID of the NFR.
 	///
 	/// This actually does computation. If you need to keep using it, then make sure you cache the
 	/// value and only call this once.
-    pub fn nft_account_id() -> T::AccountId {
+    pub fn nfr_account_id() -> T::AccountId {
         T::LockModuleId::get().into_account()
     }
 

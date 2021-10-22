@@ -1,5 +1,5 @@
 [package]
-name = "pallet-nft-auction"
+name = "pallet-nfr-trade"
 version = "0.1.0"
 authors = ["hercules-network"]
 edition = "2018"
@@ -24,13 +24,14 @@ orml-currencies = { default-features = false, version = '0.4.0' }
 orml-tokens = { default-features = false, version = '0.4.0' }
 orml-traits = { default-features = false, version = '0.4.0' }
 
-pallet-nft-multi = { path = "../nft-multi", default-features = false }
+pallet-nfr-multi = { path = "../nfr-multi", default-features = false }
 module-support = { package = "module-support",  path = "../../support", default-features = false }
 lyra-primitives = { path = "../../primitives", default-features = false }
 
 [dev-dependencies]
 sp-core = { version = "3.0.0"}
 pallet-balances = { version = "3.0.0"}
+
 
 [features]
 default = ['std']
@@ -43,7 +44,7 @@ std = [
     "sp-std/std",
     "sp-core/std",
     "module-support/std",
-    "pallet-nft-multi/std",
+    "pallet-nfr-multi/std",
     "orml-traits/std",
     "orml-currencies/std",
     "orml-tokens/std",
